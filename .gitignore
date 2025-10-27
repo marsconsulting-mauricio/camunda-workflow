@@ -8,3 +8,4 @@ target/
 .vscode/
 .DS_Store
 camunda-h2-database.mv.db
+*.tar
