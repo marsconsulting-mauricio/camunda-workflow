@@ -7,11 +7,13 @@
   <groupId>com.mars.workflow</groupId>
   <artifactId>camunda</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <properties>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
   </properties>
 
   <dependencyManagement>
@@ -28,23 +30,25 @@
         <groupId>org.camunda.bpm</groupId>
         <artifactId>camunda-bom</artifactId>
         <version>7.24.0</version>
-        <scope>import</scope>
         <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
-    <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
-    </dependency>
-
+    <!-- Camunda -->
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.camunda.bpm.springboot</groupId>
+      <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+    </dependency>
+
+    <!-- Spin (JSON/XML) -->
     <dependency>
       <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-engine-plugin-spin</artifactId>
@@ -55,14 +59,10 @@
       <artifactId>camunda-spin-dataformat-all</artifactId>
     </dependency>
 
+    <!-- Spring Boot + DB -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
     </dependency>
 
     <dependency>
@@ -70,6 +70,18 @@
       <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
 
+    <!-- Bancos -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.3</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -78,6 +90,18 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>3.5.5</version>
+        <configuration>
+          <layers>
+            <enabled>false</enabled>
+          </layers>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

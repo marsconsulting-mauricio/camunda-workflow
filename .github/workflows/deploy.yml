@@ -1,0 +1,40 @@
+name: Deploy Camunda Workflow
+
+on:
+  push:
+    branches:
+      - main  # dispara o deploy quando você fizer push na branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Instalar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build da imagem Docker
+        run: |
+          docker buildx build --platform linux/amd64 -t camunda-workflow:latest .
+
+      - name: Exportar imagem para tar
+        run: |
+          docker save camunda-workflow:latest -o camunda-workflow.tar
+
+      - name: Copiar imagem para VPS
+        run: |
+          scp -o StrictHostKeyChecking=no camunda-workflow.tar root@${{ secrets.VPS_HOST }}:/apps/
+
+      - name: Atualizar serviço Docker na VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_HOST }} "\
+            docker load -i /apps/camunda-workflow.tar && \
+            docker service update camunda_camunda --image camunda-workflow:latest --force"
