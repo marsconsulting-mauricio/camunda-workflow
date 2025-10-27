@@ -23,7 +23,7 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker buildx build --platform linux/amd64 -t camunda-workflow:latest .
+          docker buildx build --platform linux/amd64 -t camunda-workflow:latest --load .
 
       - name: Exportar imagem para tar
         run: |
