@@ -1,18 +1,28 @@
 server:
-  port: 8080
+  port: 8081
+  address: 0.0.0.0
 
 spring:
   datasource:
-    url: jdbc:h2:file:./camunda-h2-database
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: jdbc:postgresql://postgres:5432/clientes_db
+    username: spring_user
+    password: dbclientes
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 camunda:
   bpm:
+    database:
+      type: postgres
+    datasource:
+      url: jdbc:postgresql://postgres:5432/camunda_db
+      username: camunda
+      password: camunda
+      driver-class-name: org.postgresql.Driver
     admin-user:
       id: admin
       password: admin
+      firstName: Administrator

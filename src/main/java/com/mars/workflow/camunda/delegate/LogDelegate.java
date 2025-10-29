@@ -1,4 +1,4 @@
-package com.mars.workflow.delegate;
+package com.mars.workflow.camunda.delegate;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
