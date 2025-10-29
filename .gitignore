@@ -1,11 +1,49 @@
+# --- Build e dependências ---
 target/
-*.log
 *.class
 *.jar
 *.war
-*.iml
+*.ear
+*.log
+*.tar
+
+# --- IDEs ---
 .idea/
 .vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
 .DS_Store
+
+# --- Banco local ---
 camunda-h2-database.mv.db
-*.tar
+pgdata/
+*.db
+
+# --- Docker ---
+.env
+docker-compose.override.yml
+docker-compose.dev.yml
+*.pid
+*.sock
+
+# --- Configurações locais ---
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+Thumbs.db
+
+# --- Testes e relatórios ---
+reports/
+test-output/
+surefire-reports/
+
+# --- Sistema operacional ---
+ehthumbs.db
+Icon?
+desktop.ini
