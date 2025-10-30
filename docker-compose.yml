@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_SUPERUSER:-camunda}
       POSTGRES_PASSWORD: ${POSTGRES_SUPERPASS:-camunda}
-      POSTGRES_DB: camunda_db
+      POSTGRES_DB: camunda
     ports:
       - "5432:5432"
     volumes:
@@ -26,24 +26,20 @@ services:
       dockerfile: Dockerfile
     container_name: camunda-app-1
     environment:
-      # Perfil
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
 
-      # Datasource JPA (clientes_db) — use o MESMO host "postgres" da rede do compose
+      # Datasource principal (clientes_db)
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/clientes_db}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DB_USER}        # ex.: spring_user (criado no init.sql)
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DB_PASS}        # ex.: dbclientes
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DB_USER:-spring_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DB_PASS:-dbclientes}
 
-      # Datasource Camunda (camunda_db)
-      CAMUNDA_BPM_DATASOURCE_URL: ${CAMUNDA_DB_URL:-jdbc:postgresql://postgres:5432/camunda_db}
+      # Datasource Camunda (camunda)
+      CAMUNDA_BPM_DATASOURCE_URL: ${CAMUNDA_DB_URL:-jdbc:postgresql://postgres:5432/camunda}
       CAMUNDA_BPM_DATASOURCE_USERNAME: ${CAMUNDA_DB_USER:-camunda}
       CAMUNDA_BPM_DATASOURCE_PASSWORD: ${CAMUNDA_DB_PASS:-camunda}
 
-      # (Opcional) Tuning de JVM/hibernate/log
-      # JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75.0 -Duser.timezone=America/Sao_Paulo"
-
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
