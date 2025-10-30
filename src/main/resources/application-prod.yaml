@@ -26,3 +26,5 @@ camunda:
       id: admin
       password: admin
       firstName: Administrator
+    deployment-resource-pattern: classpath:/processes/*.bpmn, classpath:/processes/*.dmn
+    auto-deployment-enabled: true

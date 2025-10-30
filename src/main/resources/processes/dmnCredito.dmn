@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="analiseCredito" name="AnaliseCredito" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <decision id="Decision_1jc9lhk" name="AnaliseCredito" camunda:historyTimeToLive="180">
+    <decisionTable id="DecisionTable_13rm5us" hitPolicy="FIRST">
+      <input id="Input_1" label="renda" camunda:inputVariable="rendaMensal">
+        <inputExpression id="InputExpression_1" typeRef="double" expressionLanguage="feel">
+          <text>rendaMensal</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1165e2g" label="valorSolicitado" camunda:inputVariable="valorSolicitado">
+        <inputExpression id="LiteralExpression_1a6kpfw" typeRef="double">
+          <text>valorSolicitado</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="limiteConcedido" name="limiteConcedido" typeRef="double" biodi:width="192" />
+      <output id="OutputClause_0ph4uhi" label="resultadoAnalise" name="resultadoAnalise" typeRef="string" />
+      <rule id="DecisionRule_0phfv6d">
+        <inputEntry>
+          <text>&gt;= 10000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0c29mwo">
+          <text>&lt;= 20000</text>
+        </inputEntry>
+        <outputEntry>
+          <text>valorSolicitado</text>
+        </outputEntry>
+        <outputEntry>
+          <text>"APROVADO"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_151rdry">
+        <inputEntry id="UnaryTests_0nhater">
+          <text>[5000..10000[</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0olb22y">
+          <text>&lt;= 15000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0fvmnod">
+          <text>valorSolicitado*0.9</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0ynnbww">
+          <text>"APROVADO"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0jgst9q">
+        <inputEntry id="UnaryTests_08t7n1x">
+          <text>[3000..5000[</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1y3ab7t">
+          <text>&lt;= 5000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10baql5">
+          <text>valorSolicitado*0.7</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1f9akqq">
+          <text>"MANUAL"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1dwsqls">
+        <inputEntry id="UnaryTests_0dx698w">
+          <text>&lt; 3000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19utizt">
+          <text>&gt;= 3000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0xo45fb">
+          <text>0</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0prq7bi">
+          <text>"REPROVADO"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0dvj31o">
+        <inputEntry id="UnaryTests_0e6t8tp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1k4n19p">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1sg0i4r">
+          <text>0</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_06vq344">
+          <text>"MANUAL"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1ihcme2">
+      <dmndi:DMNShape id="DMNShape_1ijz5so" dmnElementRef="Decision_1jc9lhk">
+        <dc:Bounds height="80" width="180" x="150" y="80" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
