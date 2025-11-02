@@ -8,6 +8,18 @@ spring:
     username: spring_user
     password: dbclientes
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mauricio@marsconsulting.com.br
+    password: lnjcrjejazwpoblp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -28,3 +40,8 @@ camunda:
       firstName: Administrator
     deployment-resource-pattern: classpath:/processes/*.bpmn, classpath:/processes/*.dmn
     auto-deployment-enabled: true
+
+app:
+  notifications:
+    credit-request:
+      recipient: mauricio@marsconsulting.com.br

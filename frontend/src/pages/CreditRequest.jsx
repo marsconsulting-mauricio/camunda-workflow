@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 const steps = [
@@ -8,6 +8,9 @@ const steps = [
 ];
 
 export default function CreditRequest() {
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -24,10 +27,50 @@ export default function CreditRequest() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log("Dados enviados:", data);
-    alert("Solicitação enviada com sucesso!");
-    reset();
+  const onSubmit = async (data) => {
+    const payload = {
+      cpf: data.cpf,
+      nome: data.nome,
+      rendaMensal: data.rendaMensal,
+      valorSolicitado: data.valorSolicitado,
+      observacoes: data.observacoes || null,
+    };
+
+    try {
+      setSubmitting(true);
+      setFeedback(null);
+
+      const response = await fetch("/api/credit-requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}));
+        const message =
+          errorBody.message ||
+          errorBody.error ||
+          "Não foi possível iniciar o processo.";
+        throw new Error(message);
+      }
+
+      const result = await response.json();
+      setFeedback({
+        type: "success",
+        message: `Processo iniciado com sucesso. ID: ${result.processInstanceId}`,
+      });
+      reset();
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message: error.message || "Erro inesperado ao enviar solicitação.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -215,16 +258,32 @@ export default function CreditRequest() {
               </div>
             </section>
 
+            {feedback && (
+              <div
+                className={`rounded-2xl border px-4 py-3 text-sm font-medium ${
+                  feedback.type === "success"
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
+                    : "border-red-500/40 bg-red-500/10 text-red-200"
+                }`}
+              >
+                {feedback.message}
+              </div>
+            )}
+
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition-all hover:from-indigo-400 hover:via-purple-400 hover:to-sky-400 hover:shadow-xl md:w-auto"
+                disabled={submitting}
+                className="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition-all hover:from-indigo-400 hover:via-purple-400 hover:to-sky-400 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
               >
-                Enviar solicitação para análise
+                {submitting ? "Enviando..." : "Enviar solicitação para análise"}
               </button>
               <button
                 type="button"
-                onClick={() => reset()}
+                onClick={() => {
+                  reset();
+                  setFeedback(null);
+                }}
                 className="inline-flex items-center justify-center rounded-2xl border border-white/10 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
               >
                 Limpar campos

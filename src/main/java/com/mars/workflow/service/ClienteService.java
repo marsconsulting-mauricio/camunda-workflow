@@ -31,6 +31,16 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    public Cliente salvarOuAtualizarPorCpf(Cliente dadosCliente) {
+        return clienteRepository.findByCpf(dadosCliente.getCpf())
+                .map(existing -> {
+                    existing.setNome(dadosCliente.getNome());
+                    existing.setRendaMensal(dadosCliente.getRendaMensal());
+                    return clienteRepository.save(existing);
+                })
+                .orElseGet(() -> clienteRepository.save(dadosCliente));
+    }
+
     public Cliente atualizar(Long id, Cliente dadosAtualizados) {
         return clienteRepository.findById(id)
                 .map(cliente -> {
